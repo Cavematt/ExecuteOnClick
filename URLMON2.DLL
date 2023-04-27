@@ -1,0 +1,37 @@
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+namespace FileDownloader
+{
+    class Program
+    {
+        [DllImport("urlmon.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint URLDownloadToFile(
+            IntPtr pCaller, 
+            string szURL, 
+            string szFileName, 
+            uint dwReserved, 
+            IntPtr lpfnCB
+        );
+
+        static void Main(string[] args)
+        {
+            string fileUrl = "https://example.com/file.exe";
+            string savePath = "C:\\Temp\\file.exe";
+
+            uint retVal = URLDownloadToFile(IntPtr.Zero, fileUrl, savePath, 0, IntPtr.Zero);
+
+            if (retVal == 0)
+            {
+                Process.Start(savePath);
+            }
+            else
+            {
+                Console.WriteLine("File download failed with error code: " + retVal);
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
